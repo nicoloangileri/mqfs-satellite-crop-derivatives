@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use this software or working paper, please cite it as below."
+title: "Pricing Satellite-Indexed Parametric Crop-Insurance Derivatives over Sicily"
+authors:
+  - family-names: "Angileri"
+    given-names: "Nicolò"
+    affiliation: "Mediterranean Quantitative Finance Society (MQFS)"
+version: 0.1.0
+date-released: 2026-06-10
+license: MIT
+keywords:
+  - parametric insurance
+  - weather derivatives
+  - NDVI
+  - remote sensing
+  - Monte Carlo
+  - Ornstein-Uhlenbeck
+  - Wang transform
+abstract: >
+  An end-to-end, reproducible pipeline that prices parametric crop-insurance
+  derivatives whose settlement index is built from Sentinel-2 vegetation indices
+  (NDVI) over Sicily. NDVI is modelled as a harmonic climatology plus a
+  mean-reverting Ornstein-Uhlenbeck anomaly and priced under incomplete-market
+  principles (standard-deviation loading and the Wang transform). The Monte Carlo
+  engine is implemented in NumPy, C, C++ and MATLAB, with the numerical engines
+  cross-validated to Monte Carlo standard error.

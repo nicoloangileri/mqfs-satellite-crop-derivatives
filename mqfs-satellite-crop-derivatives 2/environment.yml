@@ -1,0 +1,35 @@
+# =====================================================================
+# Full conda environment, including the geospatial ingestion stack.
+# Use this if you intend to ingest real Sentinel-2 imagery; the GDAL-backed
+# packages (rasterio/rioxarray/geopandas) are far easier to install via conda.
+#
+#   conda env create -f environment.yml
+#   conda activate mqfs-satellite
+# =====================================================================
+name: mqfs-satellite
+channels:
+  - conda-forge
+dependencies:
+  - python>=3.10
+  # core
+  - numpy>=1.24
+  - scipy>=1.10
+  - pandas>=2.0
+  - matplotlib>=3.7
+  - pyyaml>=6.0
+  - pytest>=7.0
+  # native build (C / C++ engines)
+  - gcc_linux-64        # or the platform-appropriate compiler
+  - gxx_linux-64
+  - make
+  - cmake>=3.18
+  - pybind11>=2.11
+  # geospatial ingestion ("The Oracle")
+  - rioxarray>=0.15
+  - xarray>=2024.0
+  - geopandas>=0.14
+  - rasterio>=1.3
+  - dask>=2024.0
+  - pip
+  - pip:
+      - earthengine-api>=0.1.380

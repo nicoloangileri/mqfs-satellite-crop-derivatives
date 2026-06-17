@@ -1,0 +1,75 @@
+{
+  "result": {
+    "fair_value": 2019.2973039767196,
+    "sd_premium": 3302.612811058927,
+    "wang_premium": 2596.874149285769,
+    "expected_payout": 2049.815074610067,
+    "trigger_probability": 0.22641,
+    "expected_payout_if_triggered": 9053.553617817528,
+    "payout_std": 5210.84134905238,
+    "var_95": 13967.211687482488,
+    "cvar_95": 20523.53841305991,
+    "loss_ratio_at_sd": 0.6206646651845417,
+    "n_paths": 200000,
+    "bachelier_check": 2050.3212884441195
+  },
+  "engines": {
+    "NumPy": {
+      "fair_value": 2019.2973039767196,
+      "sd_premium": 3302.612811058927,
+      "wang_premium": 2596.874149285769,
+      "expected_payout": 2049.815074610067,
+      "trigger_probability": 0.22641,
+      "expected_payout_if_triggered": 9053.553617817528,
+      "payout_std": 5210.84134905238,
+      "var_95": 13967.211687482488,
+      "cvar_95": 20523.53841305991,
+      "loss_ratio_at_sd": 0.6206646651845417,
+      "n_paths": 200000,
+      "bachelier_check": 2050.3212884441195
+    },
+    "C": {
+      "fair_value": 2002.5490957431393,
+      "sd_premium": 3277.4714045456094,
+      "wang_premium": NaN,
+      "expected_payout": 2032.813749623255,
+      "trigger_probability": 0.225475,
+      "expected_payout_if_triggered": 9015.694642968201,
+      "payout_std": 5176.761168141694,
+      "var_95": 13855.890413136118,
+      "cvar_95": 20387.28244569522,
+      "loss_ratio_at_sd": 0.6202384395494324,
+      "n_paths": 200000,
+      "bachelier_check": NaN
+    },
+    "C++": {
+      "fair_value": 2023.5757012218305,
+      "sd_premium": 3311.1881332665134,
+      "wang_premium": NaN,
+      "expected_payout": 2054.158131549195,
+      "trigger_probability": 0.22581,
+      "expected_payout_if_triggered": 9096.843060755478,
+      "payout_std": 5228.28880772071,
+      "var_95": 13990.646483359014,
+      "cvar_95": 20615.071427273877,
+      "loss_ratio_at_sd": 0.620368897469668,
+      "n_paths": 200000,
+      "bachelier_check": NaN
+    }
+  },
+  "ou": {
+    "kappa": 1.9100837590999666,
+    "sigma": 0.24827033251527203,
+    "half_life_years": 0.3628883692967249,
+    "x0": 0.07719966356997232
+  },
+  "contract": {
+    "strike": 0.45167805503667824,
+    "tick": 250000.0,
+    "limit": 50000.0,
+    "index": "mean"
+  },
+  "mc_standard_error_fair": 11.478322841661715,
+  "n_seasons": 11,
+  "n_episodes": 7
+}

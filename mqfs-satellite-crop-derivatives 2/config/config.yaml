@@ -1,0 +1,106 @@
+# =====================================================================
+# MQFS Satellite Crop Derivatives — master configuration
+# MQFS Working Paper — Satellite-Indexed Parametric Crop Insurance
+# =====================================================================
+# Everything that is region-, crop-, or contract-specific lives here so
+# that the codebase stays declarative. No magic numbers in the modules.
+
+project:
+  name: mqfs-satellite-crop-derivatives
+  author: Nicolo Angileri
+  base_currency: EUR
+
+# ---------------------------------------------------------------------
+# THE ORACLE — area of interest & sensor configuration
+# ---------------------------------------------------------------------
+aoi:
+  # Sicily bounding box (WGS84, lon/lat). Used as a coarse pre-filter;
+  # the agricultural mask below narrows it to cropland.
+  name: Sicily
+  bbox: [12.40, 36.60, 15.65, 38.30]   # [min_lon, min_lat, max_lon, max_lat]
+  crs: "EPSG:4326"
+  # Optional sub-regions priced as separate contracts (basis-risk diversification).
+  zones:
+    - { id: SIC-CL, name: "Caltanissetta-Enna (durum wheat belt)", bbox: [13.90, 37.30, 14.60, 37.75] }
+    - { id: SIC-CT, name: "Catania plain (citrus / horticulture)",  bbox: [14.75, 37.20, 15.20, 37.65] }
+    - { id: SIC-TP, name: "Trapani (vineyard / olive)",             bbox: [12.45, 37.55, 13.10, 38.05] }
+
+sensor:
+  mission: "COPERNICUS/S2_SR_HARMONIZED"   # Sentinel-2 L2A surface reflectance, GEE id
+  start_date: "2016-01-01"                  # S2 SR archive depth
+  end_date:   "2026-05-01"
+  scale_m: 20                               # native res for the SWIR bands used by NDMI
+  max_cloud_pct: 60                         # scene-level pre-filter; pixel masking applied after
+  bands:
+    blue:  "B2"
+    green: "B3"
+    red:   "B4"
+    nir:   "B8"
+    nir_narrow: "B8A"
+    swir1: "B11"
+    swir2: "B12"
+    scl:   "SCL"     # Scene Classification Layer for cloud/shadow masking
+  composite:
+    cadence: "dekadal"   # 10-day composites: standard for operational phenology
+    reducer: "median"    # robust to residual cloud / BRDF
+
+landcover:
+  # ESA WorldCover 10 m, class 40 = cropland. Used to restrict reductions
+  # to agricultural pixels only (removes urban/forest/water contamination).
+  product: "ESA/WorldCover/v200"
+  cropland_class: 40
+
+# ---------------------------------------------------------------------
+# THE QUANT LAYER — signal definitions
+# ---------------------------------------------------------------------
+signal:
+  smoothing:
+    method: "whittaker"   # whittaker | savgol ; gap-fills cloud-induced NaNs
+    lambda: 1500.0        # Whittaker roughness penalty
+    savgol_window: 5
+    savgol_poly: 2
+  climatology:
+    harmonics: 2          # Fourier order for the day-of-year seasonal mean
+    min_years: 4          # minimum seasons required to trust the climatology
+  anomaly:
+    standardize: true     # z-score the de-seasonalised residual
+  yield_shock:
+    vci_trigger: 0.35     # Vegetation Condition Index below this = stress
+    zscore_trigger: -1.5  # standardized anomaly threshold
+
+# ---------------------------------------------------------------------
+# THE PRICING ENGINE — risk window, model & contract
+# ---------------------------------------------------------------------
+pricing:
+  # Phenological risk window for Sicilian durum wheat: the grain-filling
+  # / heading phase (mid-March to end-May) drives final yield.
+  risk_window:
+    start_doy: 75    # ~16 March
+    end_doy:   151   # ~31 May
+    step_days: 10    # dekadal steps inside the window  -> M steps
+  model:
+    type: "ou_seasonal"        # mean-reverting anomaly around seasonal mean
+    dt_days: 10
+    ndvi_floor: -0.20
+    ndvi_cap:    0.95
+  contract:
+    index: "mean"              # mean | integral(iNDVI) | min
+    strike_quantile: 0.20      # K set at the 20th historical percentile of the index
+    tick_eur: 250000.0         # EUR paid per 1.00 NDVI unit below strike
+    limit_eur: 50000.0         # maximum payout per contract (cap)
+    notional_hint_eur: 50000.0
+  market:
+    risk_free: 0.030           # EUR risk-free (annualised)
+    horizon_years: 0.50        # tenor used for discounting
+    sd_loading_theta: 0.25     # standard-deviation premium principle loading
+    wang_lambda: 0.15          # Wang-transform market price of risk
+  monte_carlo:
+    n_paths: 200000
+    antithetic: true
+    seed: 20260506
+
+io:
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+  results_dir: "results"
+  figures_dir: "figures"

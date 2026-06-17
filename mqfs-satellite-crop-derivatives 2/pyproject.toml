@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mqfs-satellite-crop-derivatives"
+version = "0.1.0"
+description = "Pricing satellite-indexed parametric crop-insurance derivatives over Sicily (NDVI -> OU Monte Carlo, multi-language)."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Nicolò Angileri" }]
+keywords = ["parametric-insurance", "weather-derivatives", "ndvi", "remote-sensing",
+            "monte-carlo", "ornstein-uhlenbeck", "wang-transform", "quantitative-finance"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Scientific/Engineering :: GIS",
+    "Topic :: Office/Business :: Financial",
+]
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "pandas>=2.0",
+    "matplotlib>=3.7",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=7.0"]
+geo = ["rioxarray>=0.15", "xarray>=2024.0", "geopandas>=0.14", "rasterio>=1.3", "dask>=2024.0", "earthengine-api>=0.1.380"]
+native = ["pybind11>=2.11"]
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
